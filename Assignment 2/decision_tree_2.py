@@ -13,6 +13,7 @@
 from sklearn import tree
 import csv
 
+path = 'Assignment 2/assignment_2_data/'
 dataSets = ['contact_lens_training_1.csv', 'contact_lens_training_2.csv', 'contact_lens_training_3.csv']
 
 for ds in dataSets:
@@ -22,7 +23,7 @@ for ds in dataSets:
     Y = []
 
     #Reading the training data in a csv file
-    with open(ds, 'r') as csvfile:
+    with open(path + ds, 'r') as csvfile:
          reader = csv.reader(csvfile)
          for i, row in enumerate(reader):
              if i > 0: #skipping the header
@@ -37,16 +38,16 @@ for ds in dataSets:
     #--> add your Python code here
 
     #Loop your training and test tasks 10 times here
-    for i in range (10):
+    # for i in range (10):
 
-       #Fitting the decision tree to the data setting max_depth=3
-       clf = tree.DecisionTreeClassifier(criterion = 'entropy', max_depth=5)
-       clf = clf.fit(X, Y)
+    #    #Fitting the decision tree to the data setting max_depth=3
+    #    clf = tree.DecisionTreeClassifier(criterion = 'entropy', max_depth=5)
+    #    clf = clf.fit(X, Y)
 
-       #Read the test data and add this data to dbTest
-       #--> add your Python code here
+    #    #Read the test data and add this data to dbTest
+    #    #--> add your Python code here
 
-       for data in dbTest:
+    #    for data in dbTest:
            #Transform the features of the test instances to numbers following the same strategy done during training,
            #and then use the decision tree to make the class prediction. For instance: class_predicted = clf.predict([[3, 1, 2, 1]])[0]
            #where [0] is used to get an integer as the predicted class label so that you can compare it with the true label
