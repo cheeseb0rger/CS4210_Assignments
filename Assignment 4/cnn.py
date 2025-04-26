@@ -20,7 +20,7 @@ def load_digit_images_from_folder(folder_path, image_size=(32, 32)):
     for filename in os.listdir(folder_path):
         # Getting the label of the image (it's the first number in the filename)
         # --> add your Python code here.
-        label = ?
+        label = int(filename[0:1])
 
         # Converting images to grayscale and resizing them to 32x32
         img = Image.open(os.path.join(folder_path, filename)).convert('L').resize(image_size)
@@ -33,22 +33,31 @@ def load_digit_images_from_folder(folder_path, image_size=(32, 32)):
 # Set your own paths here (relative to your project folder)
 train_path = os.path.join("images", "train")
 test_path = os.path.join("images", "test")
+# train_path = "Assignment 4/images/train"
+# test_path = "Assignment 4/images/test"
 
 # Loading the raw images using the provided function. Hint: Use the provided load_digit_images_from_folder function that outputs X_train, Y_train for train_path and
 # as X_test, Y_test for test_path
 # --> add your Python code here
-X_train, Y_train = ?
-X_test, Y_test = ?
+X_train, Y_train = load_digit_images_from_folder(train_path)
+X_test, Y_test = load_digit_images_from_folder(test_path)
 
 # Normalizing the data: convert pixel values from range [0, 255] to [0, 1]. Hint: divide them by 255
 # --> add your Python code here
-X_train = ?
-X_test = ?
+X_train = X_train / 255.0
+X_test = X_test / 255.0
+
+print(len(Y_train))
 
 # Reshaping the input images to include the channel dimension: (num_images, height, width, channels)
 # --> add your Python code here
-X_train = X_train.reshape(?)
-X_test = X_test.reshape(?)
+channels = 1
+
+num_images, height, width = X_train.shape
+X_train = X_train.reshape((-1, height, width, channels))
+
+num_images, height, width = X_test.shape
+X_test = X_test.reshape((-1, height, width, channels))
 
 # Building a CNN model
 model = models.Sequential([
@@ -56,34 +65,41 @@ model = models.Sequential([
     # Add a convolutional layer with 32 filters of size 3x3, relu activation, and input shape 32x32x1
     # Use layers.[add a layer here],
     # --> add your Python code here
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=X_train[0].shape),
 
     # Add a max pooling layer with pool size 2x2
     # Use layers.[add a layer here],
     # --> add your Python code here
+    layers.MaxPooling2D((2, 2)),
 
     # Add a flatten layer to convert the feature maps into a 1D vector
     # Use layers.[add a layer here],
     # --> add your Python code here
+    layers.Flatten(),
 
     # Add a dense (fully connected) layer with 64 neurons and relu activation
     # Use layers.[add a layer here],
     # --> add your Python code here
+    layers.Dense(64, activation='relu'),
 
     # Add the output layer with 10 neurons (digits 0–9) and softmax activation
     # Use layers.[add a layer here]
     # --> add your Python code here
+    layers.Dense(10, activation='softmax')
 ])
 
 # Compiling the model using optimizer = sgd, loss = sparse_categorical_crossentropy, and metric = accuracy
 # --> add your Python code here
-model.compile(optimizer=?, loss=?, metrics=[?])
+model.compile(optimizer="sgd", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
 
 # Fitting the model with batch_size=32 and epochs=10
 # --> add your Python code here
-model.fit(X_train, Y_train, batch_size=?, epochs=?, validation_data=(X_test, Y_test))
+model.fit(X_train, Y_train, batch_size=32, epochs=10, validation_data=(X_test, Y_test))
 
 # Evaluating the model on the test set
 loss, acc = model.evaluate(X_test, Y_test)
 
 # Printing the test accuracy
 # --> add your Python code here
+print("Accuracy: ", acc)
+print("Loss: ", loss)
